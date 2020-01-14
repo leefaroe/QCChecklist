@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .center-block {
+            top:50%;
+            left: 50%;
+            transform: translate3d(-50%,-50%, 0);
+            position: absolute;
+        }
+    </style>
+    <meta name="google-signin-client_id" content="326242184936-lq88u3rirfjmo8q9jevu86ifqcf73lss.apps.googleusercontent.com">
+</head>
+<body>
+<div id="loadingPage" class="center-block" style="display: none;" >
+    <img src="https://drive.google.com/uc?export=download&amp;id=1_V39kUkBHrHQlGu2r97vp3hKK8cpA_xj">
+</div>
+<div id="loadFailed" class="center-block" style="display: none;" ></div>
+
+
+<div id="login" class="center-block"  style="display: block;" >
+    Please Log in <span id="my-signin2"></span>
+</div>
+
+<div id="msgToUsr"  class="center-block"  style="display: none;" ></div>
+
+</body>
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script>
+    console.log('loc: ' + window.location.href);
+    function onLoginSuccess(googleUser) {
+        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        //window.location.href=loc
+        document.getElementById('loadingPage').style.display = 'none';
+        document.getElementById('login').style.display = 'none';
+        pageMessage('Login succeeded.')
+    }
+    function onLoginFailure(error) {
+        document.getElementById('loadingPage').style.display = 'none';
+        document.getElementById('login').style.display = 'block';
+        console.log(error);
+        pageMessage('Login failed, please try again.')
+    }
+    function renderButton() {
+        gapi.signin2.render('my-signin2', {
+            'scope': 'profile email',
+            'width': 240,
+            'height': 50,
+            'longtitle': true,
+            'theme': 'dark',
+            'onsuccess': onLoginSuccess,
+            'onfailure': onLoginFailure
+        });
+    }
+
+    window.onload=function() {
+            console.log("in onload login first "+window.location.href);
+            renderButton()
+            document.getElementById('loadingPage').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+    };
+
+    function pageMessage(s) {
+        console.log('pageMessage:'+s)
+        window.scrollTo(0, 0);
+        var errElmt = document.getElementById('msgToUsr');
+        errElmt.textContent = s;
+        errElmt.style.display = 'block';
+
+    }
+</script>
+</html>
